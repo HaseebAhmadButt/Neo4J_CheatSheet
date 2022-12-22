@@ -103,3 +103,15 @@ To create nodes and their relationship at the same time.<br>
 To select all nodes irrespective of their labels, which have incoming/outgoing “specific label” relationship attached with them.<br>
 `match(e)-[r:drives]->(d) return e,r,d`
 <br> <br>
+
+## Updating Relations between Nodes
+This will add more values/information in label attaching the two nodes.<br>
+`match(e:employee{name:"Haseeb"})-[s:studiesIn]->(d:department{name:"SEECS"}) set s.studyingDepartment="DOC" return e,s,d`<br>
+
+This will remove the new value added on label as `studyingDepartment`.<br>
+`match(e:employee{name:"Haseeb"})-[s:studiesIn]->(d:department{name:"SEECS"}) remove s.studyingDepartment return e,s,d`
+
+
+
+
+
