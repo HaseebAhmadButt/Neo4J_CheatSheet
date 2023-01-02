@@ -111,7 +111,38 @@ This will add more values/information in label attaching the two nodes.<br>
 This will remove the new value added on label as `studyingDepartment`.<br>
 `match(e:employee{name:"Haseeb"})-[s:studiesIn]->(d:department{name:"SEECS"}) remove s.studyingDepartment return e,s,d`
 
+## Creating Relationships While Creating Nodes and More on Node Relationships
+### Deletion of Nodes having relationship
+When we have relationship between two nodes, we can’t delete those nodes. The command for this will be<br>
+`match(n) detach delete n`.<br>
+For deleting a specific node we can <br>
+`select it using match() clause and then detach it and at the end delete it`.
+<br><br>
+### Creating Node along with Relations
+This will create both nodes and their relationship at the same time.<br>
+`create(d:driver{name:'Haseeb'})-[r:drives]->(c:car{name:"Kia"}) return d,r,c`
+<br>
+This will select all nodes irrespective of their labels, which have incoming/outgoing “drives” relationship attached with them.<br>
+`match(e)-[r:drives]->(d) return e,r,d`
+<br>
+This query will add two nodes in the same query time to a single department.<br>
+`create(e:employee{name:"Waleed"})-[s:studiesIn]->(d:department{name:"SEECS"}) <-[s1:studiesIn]-(e1:employee{name:"Kalasra"}) return e, e1, s, s1, d`
+<br>
 
+This will create three Node in which one is working in two departments and other two are working in same department along with the departments in which they are working. This operation is completed using a single command.
+<br>
+`CREATE(e:employee{name:"satish"})-[w:worksFor]->(d:department{name:"SMME"})<-[w1:workFor]-(e1:employee{name:"sam"})-[m:manages]->(d1:department{name:"sbst"})<-[m1:manages]-(e2:employee{name:"tom"}) return e, w, d, w1, e1, m,d1, m1,e2`
 
-
-
+## Finding all In-coming and Out-Going Relationships
+This will return all incoming relationships from to “SMME” department, from any other node. <br>
+`match(d:department{name:"SMME"})<--(e) return d,e`
+<br>
+This return all out-going nodes of all employees, like to which other node they are attached with. 
+<br>
+`match(d:employee)-->(e) return d,e `
+<br>
+This query will return nodes which have “manages”, ”workFor” relationships between. Each node can have both or any one relationship.<br>
+`match(e)-[m:manages|worksFor]->(d) return m,d,e`
+<br>
+## Clauses
+### 
