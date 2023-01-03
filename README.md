@@ -121,14 +121,13 @@ For deleting a specific node we can <br>
 ### Creating Node along with Relations
 This will create both nodes and their relationship at the same time.<br>
 `create(d:driver{name:'Haseeb'})-[r:drives]->(c:car{name:"Kia"}) return d,r,c`
-<br>
+<br><br>
 This will select all nodes irrespective of their labels, which have incoming/outgoing “drives” relationship attached with them.<br>
 `match(e)-[r:drives]->(d) return e,r,d`
-<br>
+<br><br>
 This query will add two nodes in the same query time to a single department.<br>
 `create(e:employee{name:"Waleed"})-[s:studiesIn]->(d:department{name:"SEECS"}) <-[s1:studiesIn]-(e1:employee{name:"Kalasra"}) return e, e1, s, s1, d`
-<br>
-
+<br><br>
 This will create three Node in which one is working in two departments and other two are working in same department along with the departments in which they are working. This operation is completed using a single command.
 <br>
 `CREATE(e:employee{name:"satish"})-[w:worksFor]->(d:department{name:"SMME"})<-[w1:workFor]-(e1:employee{name:"sam"})-[m:manages]->(d1:department{name:"sbst"})<-[m1:manages]-(e2:employee{name:"tom"}) return e, w, d, w1, e1, m,d1, m1,e2`
@@ -136,13 +135,64 @@ This will create three Node in which one is working in two departments and other
 ## Finding all In-coming and Out-Going Relationships
 This will return all incoming relationships from to “SMME” department, from any other node. <br>
 `match(d:department{name:"SMME"})<--(e) return d,e`
-<br>
+<br><br>
 This return all out-going nodes of all employees, like to which other node they are attached with. 
 <br>
 `match(d:employee)-->(e) return d,e `
-<br>
+<br><br>
 This query will return nodes which have “manages”, ”workFor” relationships between. Each node can have both or any one relationship.<br>
 `match(e)-[m:manages|worksFor]->(d) return m,d,e`
 <br>
-## Clauses
-### 
+## More on Clauses
+### Order By Clause
+This will return employee names in ascending order.
+<br>
+`match(e:employee) return e.name order by e.name`
+<br><br>
+This will return names of employees ordered by multiple properties.
+<br>
+`match(e:employee) return e.name, e.salary order by e.name, e.salary`
+<br>
+
+### Skip Clause
+This command will skip the first “Integer” value from result list and return the remaining list.
+<br>
+`match(e:employee) return e.name skip {Any Integer Value}`
+<br><br>
+### Limit Clause
+This returns only top 3 results from the result list.
+<br>
+`match(e:employee) return e.name limit 3`
+<br><br>
+### Union and Union All Clause
+This command will return unique result by joining two sets described in our query labels.
+<br>
+`match(e:employee) return e.name UNION match (e:employee) return e.name`
+<br><br>
+
+This command will return all values irrespective of rather they occur single time or twice or more, that is the main difference between “UNION” and “UNION ALL” clause. 
+<br>
+`match(e:employee) return e.name UNION ALL match (e:employee) return e.name`
+<br><br>
+
+### Merge Clause
+This query creates a new node if it does not exist otherwise return it as it is, with its value.
+<br>
+`merge(e:driver) return e`
+<br><br>
+
+
+This command will create a new node if it does not exist and if it is created by this command then it will set its property “Joined” on creating this node.
+<br>
+`merge(e:clerk) on create set e.Joined="Today" return e`
+<br><br>
+
+This command will create a new node if it does not exist and if it existed then this command will change the “Joined” property to a new value.
+<br>
+`merge(e:clerk) on match set e.Joined="Yesterday" return e`
+<br><br>
+
+Single command to run above both cases.
+<br>
+`merge(e:clerk) on match set e.Joined="Yesterday" on create set e.Joined="Today" return e`
+<br><br>
